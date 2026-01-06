@@ -1,0 +1,36 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Environments, dependencies, and generated files
+.venv*/
+venv/
+.python311/
+.node/
+.downloads/
+node_modules/
+dist/
+__pycache__/
+*.py[cod]
+*.tsbuildinfo
+.pytest_cache/
+.ruff_cache/
+*.log
+.DS_Store
+.idea/
+.vscode/
+
+# Generated synthetic data, runtime state, and evaluation output
+backend/data/*
+!backend/data/README.md
+backend/evaluation/credit_v1/*
+!backend/evaluation/credit_v1/README.md
+!backend/evaluation/credit_v1/cases.json
+!backend/evaluation/credit_v1/questions.json
+!backend/evaluation/credit_v1/behavior_rubric.json
+*.db
+*.db-*
+*.sqlite*
