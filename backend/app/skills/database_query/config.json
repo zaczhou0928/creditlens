@@ -1,0 +1,1 @@
+{"name":"database_query","description":"基于金融知识和Schema RAG生成SQL，使用MCP取数、补充检索和澄清。","allowed_tools":["query_credit_ops","search_credit_schema","current_datetime","resolve_date_range"],"max_tool_calls":6,"output_actions":["call_tool","clarify","answer"]}

@@ -1,0 +1,1 @@
+{"name":"data_qa","description":"基于后端可信信贷结果生成可追溯分析和报告。","allowed_tools":["build_bar_chart","build_line_chart"],"max_tool_calls":5,"output_actions":["answer","report"]}
