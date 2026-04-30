@@ -1,0 +1,6 @@
+body { margin: 0; font-family: system-ui, sans-serif; background: #f4f7fa; color: #17324d; }
+main { max-width: 860px; margin: 48px auto; padding: 28px; background: white; border-radius: 12px; }
+label { display: block; margin: 16px 0; }
+input, textarea { display: block; width: 95%; padding: 10px; margin-top: 6px; }
+button { padding: 10px 20px; cursor: pointer; }
+pre { overflow-x: auto; white-space: pre-wrap; }
