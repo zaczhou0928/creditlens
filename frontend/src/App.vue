@@ -1,37 +1,64 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { api } from './api'
-import type { QueryResult } from './types'
-const username = ref('analyst'), password = ref('analyst123')
-const query = ref('查询2026年9月各渠道放款金额')
-const loggedIn = ref(api.hasSession()), busy = ref(false), error = ref('')
-const result = ref<QueryResult | null>(null)
-const sessionId = crypto.randomUUID()
-async function login() {
-  error.value = ''
-  try { await api.login(username.value, password.value); loggedIn.value = true }
-  catch (e) { error.value = e instanceof Error ? e.message : String(e) }
-}
-async function run() {
-  busy.value = true; error.value = ''
-  try { result.value = await api.query(query.value, {}, sessionId) }
-  catch (e) { error.value = e instanceof Error ? e.message : String(e) }
-  finally { busy.value = false }
-}
+import ResultTableCard from './components/ResultTableCard.vue'
+import ReportCard from './components/ReportCard.vue'
+import type { AppConfig, AuthUser, MetricDefinition, QueryResult, ReportDataSource, SavedMemory } from './types'
+
+const user=ref<AuthUser|null>(null), config=ref<AppConfig|null>(null)
+const username=ref('analyst'),password=ref('analyst123'),input=ref(''),error=ref(''),busy=ref(false)
+const session=ref(crypto.randomUUID()),turns=ref<{query:string;result:QueryResult}[]>([])
+const saved=ref<SavedMemory[]>([]),selected=ref<string[]>([]),metricSearch=ref(''),activeMetric=ref<MetricDefinition|null>(null)
+const resultCache=ref<Record<string,QueryResult>>({}),stream=ref<HTMLElement|null>(null)
+const prompts=computed(()=>config.value?.credit_demo_mode?['查询2026年9月各渠道放款金额','查询2026年9月末各产品贷款余额','查询2026年9月各地区审批通过率','查询2026年9月末逾期率']:['列出2026年9月申请金额最高的五笔申请及客户群体','统计2026年9月各产品贷款笔数、平均本金和最长贷款期限','对比2026年9月各产品净放款本金和净实还本金','从还款计划和分配重算2026年9月30日各借据逾期天数'])
+const metrics=computed(()=>config.value?.metrics.filter(m=>(m.label+m.definition).includes(metricSearch.value))||[])
+const scopeLabel=computed(()=>user.value?.role==='regional'?'华东机构数据':'全部演示机构')
+const choices=computed(()=>Object.values(resultCache.value).filter(r=>r.status==='completed'&&r.query_plan).slice(-12).reverse())
+const chartSources=computed<ReportDataSource[]>(()=>Object.values(resultCache.value).map(r=>({taskId:r.task_id,title:r.result_title||'查询结果',columns:r.columns,rows:r.rows,column_metadata:r.column_metadata})))
+const sourceLabels:Record<string,string>={user:'本轮指定',user_confirmed:'已确认',inherited:'沿用上轮',default:'系统默认',default_data_cutoff:'默认数据截止日'}
+
+onMounted(async()=>{if(api.hasSession()){try{user.value=await api.me();await initialize()}catch{api.clearSession()}}})
+async function initialize(){config.value=await api.config();saved.value=await api.memories();turns.value=[];selected.value=[];resultCache.value={};session.value=crypto.randomUUID();for(const m of saved.value){if(m.task_id){try{resultCache.value[m.task_id]=await api.task(m.task_id)}catch{/* permission or stale result: omit */}}}}
+async function login(){busy.value=true;error.value='';try{user.value=await api.login(username.value,password.value);await initialize()}catch(e){error.value=e instanceof Error?e.message:'登录失败'}finally{busy.value=false}}
+async function logout(){await api.logout();user.value=null;config.value=null;turns.value=[];selected.value=[];resultCache.value={}}
+function account(name:string){username.value=name;password.value=name+'123'}
+function remember(result:QueryResult){if(result.query_plan)resultCache.value[result.task_id]=result}
+async function ask(question=input.value){if(!question.trim()||busy.value)return;busy.value=true;error.value='';input.value='';try{const result=await api.query(question,{analysis_table_ids:selected.value},session.value);turns.value.push({query:question,result});remember(result);await nextTick();stream.value?.scrollIntoView({behavior:'smooth',block:'end'})}catch(e){error.value=e instanceof Error?e.message:'查询失败'}finally{busy.value=false}}
+async function clarify(turn:{query:string;result:QueryResult},option:string){busy.value=true;error.value='';try{turn.result=await api.clarify(turn.result.task_id,option);remember(turn.result)}catch(e){error.value=e instanceof Error?e.message:'澄清失败'}finally{busy.value=false}}
+async function saveResult(result:QueryResult){try{await api.save(result.task_id);result.saved=true;saved.value=await api.memories()}catch(e){error.value=e instanceof Error?e.message:'保存失败'}}
+function newSession(){session.value=crypto.randomUUID();turns.value=[];selected.value=[];input.value='';error.value=''}
+function selectMetric(metric:MetricDefinition){activeMetric.value=metric;input.value=`查询2026年9月${metric.time_kind==='snapshot'?'末':''}各产品${metric.label}`}
+function provenance(r:QueryResult){return `${r.interpretation?.metric_definition||''} | ${r.interpretation?.time_range||''} | ${r.interpretation?.scope_label||''} | 数据截止 ${r.data_as_of} | ${r.interpretation?.metric_version||''} | 查询 ${r.task_id}`}
 </script>
+
 <template>
-  <main>
-    <h1>CreditLens</h1><p>Retail credit analytics workspace</p>
-    <form v-if="!loggedIn" @submit.prevent="login">
-      <label>Username <input v-model="username" autocomplete="username" /></label>
-      <label>Password <input v-model="password" type="password" autocomplete="current-password" /></label>
-      <button>Sign in</button>
-    </form>
-    <form v-else @submit.prevent="run">
-      <label>Question <textarea v-model="query" rows="3" /></label>
-      <button :disabled="busy">{{ busy ? 'Running...' : 'Run query' }}</button>
-    </form>
-    <p v-if="error" role="alert">{{ error }}</p>
-    <section v-if="result"><h2>{{ result.message }}</h2><pre>{{ JSON.stringify(result, null, 2) }}</pre></section>
-  </main>
+  <div v-if="!user" class="credit-login">
+    <div class="login-brand"><div class="brand-mark">CL</div><small>CREDITLENS / 信贷智析</small><h1>零售信贷经营分析<br>与贷后风险指标查询</h1><p>围绕申请、审批、放款与还款，<br>让每一次问数都有明确口径和可核对的来源。</p><div class="login-note">合成数据演示 · 机构权限 · 版本化指标</div></div>
+    <form class="credit-login-form" @submit.prevent="login"><small>进入分析工作台</small><h2>选择你的分析角色</h2><label>用户名<input v-model="username" autocomplete="username"></label><label>密码<input v-model="password" type="password" autocomplete="current-password"></label><button class="primary" :disabled="busy">{{ busy?'正在登录…':'进入工作台' }}</button><div class="account-options"><button type="button" @click="account('analyst')">经营分析员</button><button type="button" @click="account('east')">华东分析员</button><button type="button" @click="account('risk')">贷后分析员</button><button type="button" @click="account('admin')">管理员</button></div><small>演示账号密码为用户名 + 123，例如 analyst123。</small><p v-if="error" class="error-banner">{{ error }}</p></form>
+  </div>
+  <div v-else class="credit-shell">
+    <header class="credit-header"><div class="brand-mark">CL</div><div><strong>CreditLens · 信贷智析</strong><small>零售信贷经营分析与贷后风险指标查询 Agent</small></div><span class="dataset-badge">合成数据 · 截至 {{ config?.dataset.data_as_of }}</span><div class="user-chip"><strong>{{ user.display_name }}</strong><small>{{ scopeLabel }}</small></div><button @click="logout" :disabled="busy">退出</button></header>
+    <div class="credit-layout">
+      <aside class="credit-sidebar"><button class="primary" @click="newSession" :disabled="busy">＋ 新建分析</button><div class="side-heading"><strong>参考指标口径</strong><span>{{ config?.metrics.length }} 项</span></div><input v-model="metricSearch" placeholder="搜索指标或口径" aria-label="搜索指标"><button v-for="metric in metrics" :key="metric.id" class="metric-button" @click="selectMetric(metric)"><span>{{ metric.label }}</span><small>{{ metric.time_kind==='snapshot'?'日终时点':'期间统计' }} · {{ metric.unit }}</small></button><div v-if="activeMetric" class="metric-detail"><strong>{{ activeMetric.label }}</strong><p>{{ activeMetric.definition }}</p><small>{{ activeMetric.version }} · {{ activeMetric.grain }}</small></div><div class="mode-note"><strong>{{ config?.credit_demo_mode?'离线规则演示':'大模型 + 金融 RAG' }}</strong><p>当前时间基准：{{ config?.credit_reference_date }}。数据覆盖 {{ config?.dataset.data_range.start }} 至 {{ config?.dataset.data_as_of }}。</p></div></aside>
+      <main class="credit-main">
+        <div class="credit-data-strip"><span>{{ config?.credit_demo_mode?'离线规则演示':'大模型 + 金融 RAG' }}</span><span>合成数据 · 截至 {{ config?.dataset.data_as_of }}</span><span>时间基准：{{ config?.credit_reference_date }}</span></div>
+        <div v-if="!turns.length" class="credit-welcome"><span class="eyebrow">经营问数 / 口径可核对</span><h1>今天想了解哪项信贷业务？</h1><p>可查询明细、统计、排名、对比和多表结果；指标口径可作参考。离线演示仅覆盖固定指标。</p><div class="prompt-grid"><button v-for="(prompt,i) in prompts" :key="prompt" @click="ask(prompt)" :disabled="busy"><small>0{{ i+1 }} / {{ (config?.credit_demo_mode?['贷款投放','本金余额','审批表现','贷后指标']:['明细排名','多指标统计','多表对比','历史状态'])[i] }}</small><strong>{{ prompt }}</strong><span>↗</span></button></div><div class="workflow-note"><span>明确指标口径</span><i>→</i><span>查询授权数据</span><i>→</i><span>生成可追溯报告</span></div></div>
+        <div class="credit-turns">
+          <article v-for="turn in turns" :key="turn.result.task_id" class="credit-turn">
+            <div class="user-question"><span>你</span><p>{{ turn.query }}</p></div>
+            <div class="answer-header"><span class="answer-logo">CL</span><strong>{{ turn.result.message }}</strong><small :class="turn.result.status">{{ turn.result.status==='completed'?'已完成':turn.result.status==='failed'?'未完成':'待确认' }}</small></div>
+            <p v-if="turn.result.analysis" class="answer-text">{{ turn.result.analysis }}</p>
+            <div v-if="turn.result.clarification" class="clarification-options"><button v-for="option in turn.result.clarification.options" :key="option.id" @click="clarify(turn,option.id)" :disabled="busy"><strong>{{ option.label }}</strong><small>{{ option.description }}</small></button></div>
+            <div v-if="turn.result.interpretation" class="credit-scope"><div class="scope-title"><strong>本次查询口径</strong><span>{{ turn.result.interpretation.metric_version }}</span></div><dl><div><dt>指标</dt><dd>{{ turn.result.interpretation.metric }}</dd></div><div><dt>统计时间</dt><dd>{{ turn.result.interpretation.time_range }}</dd></div><div><dt>分析维度</dt><dd>{{ turn.result.interpretation.dimension }}</dd></div><div><dt>权限范围</dt><dd>{{ turn.result.interpretation.scope_label }}</dd></div></dl><p>{{ turn.result.interpretation.metric_definition }}</p><div class="source-tags"><span v-for="(value,key) in turn.result.interpretation.parameter_sources" :key="key">{{ ({metric_id:'指标',dimensions:'维度',filters:'筛选',time:'日期',dpd_threshold:'逾期阈值',comparison:'比较'} as Record<string,string>)[key]||key }}：{{ sourceLabels[value]||value }}</span></div><details><summary>完整口径与数据来源</summary><p v-for="assumption in turn.result.interpretation.assumptions" :key="assumption">{{ assumption }}</p><p>数据版本 {{ turn.result.data_version }} · 结果指纹 {{ turn.result.result_fingerprint }}</p><p>检索 {{ turn.result.retrieval?.selected_count }} 个相关字段 · {{ turn.result.retrieval?.embedding_source }}</p><details v-if="turn.result.retrieval?.hits?.length"><summary>检索字段与匹配分数</summary><p v-for="hit in turn.result.retrieval.hits" :key="hit.doc_id">{{ hit.doc_id }} · {{ hit.field_label }} · {{ hit.score }} · {{ hit.source }}</p></details><details v-if="turn.result.tool_calls?.length"><summary>工具调用过程</summary><p v-for="(call,i) in turn.result.tool_calls" :key="i">{{ call.tool }} · {{ call.success?'成功':'失败' }} · {{ call.reason || call.error }}</p></details><pre>{{ turn.result.sql }}</pre></details></div>
+            <ResultTableCard v-if="turn.result.query_plan" :title="turn.result.result_title||'查询结果'" :columns="turn.result.columns" :rows="turn.result.rows" :metadata="turn.result.column_metadata" :truncated="turn.result.truncated" :provenance="provenance(turn.result)" :updated-at="turn.result.data_as_of+' 数据截止'"><template #actions><button @click="saveResult(turn.result)" :disabled="turn.result.saved">{{ turn.result.saved?'已保存':'保存结果' }}</button><label class="include-result"><input type="checkbox" v-model="selected" :value="turn.result.task_id" :disabled="!selected.includes(turn.result.task_id)&&selected.length>=5">加入报告</label></template></ResultTableCard>
+            <div v-if="turn.result.comparison_stats?.length" class="comparison-cards"><div v-for="(stat,i) in turn.result.comparison_stats" :key="i"><strong>{{ stat.group }}</strong><p>本期 {{ stat.current ?? '—' }} · 上期 {{ stat.previous ?? '—' }}</p><small>相对变化 {{ stat.relative_change===null?'无可比基数':(Number(stat.relative_change)*100).toFixed(2)+'%' }}<template v-if="stat.percentage_point_change!==null"> · {{ stat.percentage_point_change }} 个百分点</template></small></div></div>
+            <ReportCard v-if="turn.result.report" :report="turn.result.report" :sources="chartSources" />
+          </article><div ref="stream"></div>
+        </div>
+        <div v-if="busy" class="busy-line"><span></span>正在理解问题、核对口径与查询来源…</div><p v-if="error" class="error-banner">{{ error }}</p>
+        <form class="credit-composer" @submit.prevent="ask()"><textarea v-model="input" :disabled="busy" :placeholder="config?.credit_demo_mode?'例如：查询2026年9月各渠道放款金额…':'例如：列出9月申请金额最高的五笔申请及客户群体…'" rows="2" @keydown.enter.exact.prevent="ask()"></textarea><div><small>{{ selected.length?`已选 ${selected.length} 份后端查询结果用于分析`:(config?.credit_demo_mode?'离线规则演示：每次查询一个指标，不代表模型能力':'可直接提问信贷明细、统计、排名和多表分析') }}</small><button class="primary" :disabled="busy||!input.trim()">{{ busy?'处理中…':'查询 →' }}</button></div></form>
+      </main>
+      <aside class="credit-results"><div class="side-heading"><strong>报告来源</strong><span>{{ selected.length }}/5</span></div><p>勾选已有结果，生成带口径和查询来源的分析报告。</p><div v-for="result in choices" :key="result.task_id" class="source-choice"><label><input type="checkbox" v-model="selected" :value="result.task_id" :disabled="!selected.includes(result.task_id)&&selected.length>=5"><strong>{{ result.interpretation?.metric }}</strong></label><small>{{ result.interpretation?.time_range }}</small><small>{{ result.interpretation?.dimension }} · {{ result.rows.length }} 行{{ result.truncated?'（预览）':'' }}</small></div><p v-if="!choices.length" class="muted">查询完成后，结果会出现在这里。已保存的结果可在下次登录后继续引用。</p><button class="primary" :disabled="busy||!choices.length" @click="ask('基于选中结果生成信贷经营分析报告')">生成分析报告</button><button v-if="selected.length" class="quiet" @click="selected=[]">清空选择</button></aside>
+    </div>
+  </div>
 </template>
