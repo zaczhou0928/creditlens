@@ -1,0 +1,1574 @@
+[
+  {
+    "id": "CREDIT-Q-001",
+    "kind": "query",
+    "question": "2026 年 7 月一共提交了多少笔贷款申请？",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT COUNT(DISTINCT application_id) AS 申请笔数 FROM applications WHERE applied_on >= DATE '2026-07-01' AND applied_on < DATE '2026-08-01'",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "申请笔数"
+    ],
+    "expected_rows": [
+      {
+        "申请笔数": 59
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-002",
+    "kind": "query",
+    "question": "2026 年 7 月有多少位客户提交过贷款申请？",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT COUNT(DISTINCT customer_id) AS 申请客户数 FROM applications WHERE applied_on >= DATE '2026-07-01' AND applied_on < DATE '2026-08-01'",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "申请客户数"
+    ],
+    "expected_rows": [
+      {
+        "申请客户数": 54
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-003",
+    "kind": "query",
+    "question": "2026 年 7 月提交的申请，按当前记录的申请状态分别统计笔数。",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT application_status AS 申请状态,COUNT(DISTINCT application_id) AS 申请笔数 FROM applications WHERE applied_on >= DATE '2026-07-01' AND applied_on < DATE '2026-08-01' GROUP BY application_status",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "申请状态",
+      "申请笔数"
+    ],
+    "expected_rows": [
+      {
+        "申请状态": "approved",
+        "申请笔数": 44
+      },
+      {
+        "申请状态": "rejected",
+        "申请笔数": 10
+      },
+      {
+        "申请状态": "withdrawn",
+        "申请笔数": 5
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-004",
+    "kind": "query",
+    "question": "2026 年 7 月提交的申请，申请金额的最小值、最大值和平均值各是多少？平均值保留两位小数。",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT MIN(requested_amount) AS 最小申请金额,MAX(requested_amount) AS 最大申请金额,ROUND(AVG(requested_amount),2) AS 平均申请金额 FROM applications WHERE applied_on >= DATE '2026-07-01' AND applied_on < DATE '2026-08-01'",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "最小申请金额",
+      "最大申请金额",
+      "平均申请金额"
+    ],
+    "expected_rows": [
+      {
+        "最小申请金额": "2200.00",
+        "最大申请金额": "79700.00",
+        "平均申请金额": 43413.56
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-005",
+    "kind": "query",
+    "question": "2026 年 7 月借据表中新建了多少笔借据，平均期限为多少个月？平均值保留两位小数。",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT COUNT(DISTINCT loan_id) AS 借据笔数,ROUND(AVG(term_months),2) AS 平均期限月数 FROM loans WHERE originated_on >= DATE '2026-07-01' AND originated_on < DATE '2026-08-01'",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "借据笔数",
+      "平均期限月数"
+    ],
+    "expected_rows": [
+      {
+        "借据笔数": 45,
+        "平均期限月数": 10.0
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-006",
+    "kind": "query",
+    "question": "按日期列出 2026 年 7 月有申请的各日申请笔数，按日期升序。",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT applied_on AS 申请日期,COUNT(DISTINCT application_id) AS 申请笔数 FROM applications WHERE applied_on >= DATE '2026-07-01' AND applied_on < DATE '2026-08-01' GROUP BY applied_on ORDER BY applied_on",
+    "ordered": true,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "申请日期",
+      "申请笔数"
+    ],
+    "expected_rows": [
+      {
+        "申请日期": "2026-07-01",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-03",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-04",
+        "申请笔数": 1
+      },
+      {
+        "申请日期": "2026-07-05",
+        "申请笔数": 2
+      },
+      {
+        "申请日期": "2026-07-06",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-08",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-09",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-11",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-12",
+        "申请笔数": 2
+      },
+      {
+        "申请日期": "2026-07-13",
+        "申请笔数": 1
+      },
+      {
+        "申请日期": "2026-07-14",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-16",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-17",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-19",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-20",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-22",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-24",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-25",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-27",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-28",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-30",
+        "申请笔数": 3
+      },
+      {
+        "申请日期": "2026-07-31",
+        "申请笔数": 2
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-007",
+    "kind": "query",
+    "question": "2026 年 7 月实还本金净额是多少？",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT COALESCE(SUM(principal_paid),0) AS 实还本金 FROM repayment_transactions WHERE paid_on >= DATE '2026-07-01' AND paid_on < DATE '2026-08-01' AND status IN ('success','reversal')",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "实还本金"
+    ],
+    "expected_rows": [
+      {
+        "实还本金": "1528346.08"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-008",
+    "kind": "query",
+    "question": "2026 年 7 月实还利息净额是多少？",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT COALESCE(SUM(interest_paid),0) AS 实还利息 FROM repayment_transactions WHERE paid_on >= DATE '2026-07-01' AND paid_on < DATE '2026-08-01' AND status IN ('success','reversal')",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "实还利息"
+    ],
+    "expected_rows": [
+      {
+        "实还利息": "66797.17"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-009",
+    "kind": "query",
+    "question": "2026 年 7 月净放款金额是多少？",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT COALESCE(SUM(amount),0) AS 净放款金额 FROM disbursements WHERE disbursed_on >= DATE '2026-07-01' AND disbursed_on < DATE '2026-08-01' AND status IN ('success','reversal')",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "净放款金额"
+    ],
+    "expected_rows": [
+      {
+        "净放款金额": "1866200.00"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-010",
+    "kind": "query",
+    "question": "截至 2026 年 7 月 31 日，各客户群体登记了多少位客户？",
+    "difficulty": "简单",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT customer_segment AS 客户群体,COUNT(DISTINCT customer_id) AS 登记客户数 FROM customers WHERE registered_on<=DATE '2026-07-31' GROUP BY customer_segment",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "客户群体",
+      "登记客户数"
+    ],
+    "expected_rows": [
+      {
+        "客户群体": "工薪",
+        "登记客户数": 133
+      },
+      {
+        "客户群体": "自雇",
+        "登记客户数": 134
+      },
+      {
+        "客户群体": "其他",
+        "登记客户数": 133
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-011",
+    "kind": "query",
+    "question": "2026 年 7 月各渠道的申请笔数是多少？请显示渠道名称。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT c.channel_name AS 渠道,COUNT(DISTINCT a.application_id) AS 申请笔数 FROM applications a JOIN channels c ON a.channel_id=c.channel_id WHERE a.applied_on >= DATE '2026-07-01' AND a.applied_on < DATE '2026-08-01' GROUP BY c.channel_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "渠道",
+      "申请笔数"
+    ],
+    "expected_rows": [
+      {
+        "渠道": "手机银行",
+        "申请笔数": 20
+      },
+      {
+        "渠道": "线下网点",
+        "申请笔数": 20
+      },
+      {
+        "渠道": "合作渠道",
+        "申请笔数": 19
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-012",
+    "kind": "query",
+    "question": "2026 年 7 月完成最终审批的申请，各机构的通过率是多少？请同时显示通过数和最终审批总数。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT o.org_name AS 机构,COUNT(DISTINCT CASE WHEN e.decision='approved' THEN e.application_id END) AS 通过数,COUNT(DISTINCT e.application_id) AS 最终审批总数,COUNT(DISTINCT CASE WHEN e.decision='approved' THEN e.application_id END)*1.0/NULLIF(COUNT(DISTINCT e.application_id),0) AS 审批通过率 FROM approval_events e JOIN applications a ON e.application_id=a.application_id JOIN org_units o ON a.org_id=o.org_id WHERE e.decided_on >= DATE '2026-07-01' AND e.decided_on < DATE '2026-08-01' AND e.is_final=1 AND e.decision IN ('approved','rejected') GROUP BY o.org_name",
+    "ordered": false,
+    "scales": {
+      "审批通过率": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "通过数",
+      "最终审批总数",
+      "审批通过率"
+    ],
+    "expected_rows": [
+      {
+        "机构": "杭州分行",
+        "通过数": 12,
+        "最终审批总数": 14,
+        "审批通过率": 0.8571428571428571
+      },
+      {
+        "机构": "广州分行",
+        "通过数": 11,
+        "最终审批总数": 14,
+        "审批通过率": 0.7857142857142857
+      },
+      {
+        "机构": "北京分行",
+        "通过数": 12,
+        "最终审批总数": 14,
+        "审批通过率": 0.8571428571428571
+      },
+      {
+        "机构": "上海分行",
+        "通过数": 10,
+        "最终审批总数": 13,
+        "审批通过率": 0.7692307692307693
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-013",
+    "kind": "query",
+    "question": "2026 年第三季度各产品净放款金额是多少？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT p.product_name AS 贷款产品,SUM(d.amount) AS 净放款金额 FROM disbursements d JOIN loans l ON d.loan_id=l.loan_id JOIN loan_products p ON l.product_id=p.product_id WHERE d.disbursed_on BETWEEN DATE '2026-07-01' AND DATE '2026-09-30' AND d.status IN ('success','reversal') GROUP BY p.product_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "贷款产品",
+      "净放款金额"
+    ],
+    "expected_rows": [
+      {
+        "贷款产品": "消费分期贷",
+        "净放款金额": "1896100.00"
+      },
+      {
+        "贷款产品": "优享贷",
+        "净放款金额": "2513200.00"
+      },
+      {
+        "贷款产品": "薪享贷",
+        "净放款金额": "2498600.00"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-014",
+    "kind": "query",
+    "question": "2026 年 7 月新建借据按产品统计借据笔数、初始本金合计和最长期限。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT p.product_name AS 贷款产品,COUNT(DISTINCT l.loan_id) AS 借据笔数,SUM(l.principal) AS 初始本金合计,MAX(l.term_months) AS 最长期限月数 FROM loans l JOIN loan_products p ON l.product_id=p.product_id WHERE l.originated_on >= DATE '2026-07-01' AND l.originated_on < DATE '2026-08-01' GROUP BY p.product_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "贷款产品",
+      "借据笔数",
+      "初始本金合计",
+      "最长期限月数"
+    ],
+    "expected_rows": [
+      {
+        "贷款产品": "消费分期贷",
+        "借据笔数": 15,
+        "初始本金合计": "574500.00",
+        "最长期限月数": 6
+      },
+      {
+        "贷款产品": "优享贷",
+        "借据笔数": 15,
+        "初始本金合计": "633400.00",
+        "最长期限月数": 12
+      },
+      {
+        "贷款产品": "薪享贷",
+        "借据笔数": 15,
+        "初始本金合计": "658300.00",
+        "最长期限月数": 12
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-015",
+    "kind": "query",
+    "question": "2026 年 7 月各客户群体的申请平均金额是多少？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT c.customer_segment AS 客户群体,ROUND(AVG(a.requested_amount),2) AS 平均申请金额 FROM applications a JOIN customers c ON a.customer_id=c.customer_id WHERE a.applied_on >= DATE '2026-07-01' AND a.applied_on < DATE '2026-08-01' GROUP BY c.customer_segment",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "客户群体",
+      "平均申请金额"
+    ],
+    "expected_rows": [
+      {
+        "客户群体": "工薪",
+        "平均申请金额": 47170.0
+      },
+      {
+        "客户群体": "自雇",
+        "平均申请金额": 42000.0
+      },
+      {
+        "客户群体": "其他",
+        "平均申请金额": 41000.0
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-016",
+    "kind": "query",
+    "question": "2026 年 7 月各渠道的放款客户数是多少？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "WITH n AS (SELECT l.channel_id,l.customer_id,SUM(d.amount) AS amount FROM disbursements d JOIN loans l ON d.loan_id=l.loan_id WHERE d.disbursed_on >= DATE '2026-07-01' AND d.disbursed_on < DATE '2026-08-01' AND d.status IN ('success','reversal') GROUP BY l.channel_id,l.customer_id) SELECT c.channel_name AS 渠道,COUNT(DISTINCT n.customer_id) AS 放款客户数 FROM n JOIN channels c ON n.channel_id=c.channel_id WHERE n.amount>0 GROUP BY c.channel_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "渠道",
+      "放款客户数"
+    ],
+    "expected_rows": [
+      {
+        "渠道": "手机银行",
+        "放款客户数": 13
+      },
+      {
+        "渠道": "合作渠道",
+        "放款客户数": 16
+      },
+      {
+        "渠道": "线下网点",
+        "放款客户数": 14
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-017",
+    "kind": "query",
+    "question": "2026 年 7 月各渠道的首次放款客户数是多少？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "WITH net AS (SELECT l.customer_id,l.channel_id,l.product_id,l.loan_id,d.disbursed_on,SUM(d.amount) AS amount FROM disbursements d JOIN loans l ON d.loan_id=l.loan_id WHERE d.status IN ('success','reversal') GROUP BY l.customer_id,l.channel_id,l.product_id,l.loan_id,d.disbursed_on HAVING SUM(d.amount)>0), firsts AS (SELECT customer_id,channel_id,product_id,disbursed_on,ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY disbursed_on,loan_id) AS rn FROM net) SELECT c.channel_name AS 渠道,COUNT(DISTINCT f.customer_id) AS 首次放款客户数 FROM firsts f JOIN channels c ON f.channel_id=c.channel_id WHERE f.rn=1 AND f.disbursed_on >= DATE '2026-07-01' AND f.disbursed_on < DATE '2026-08-01' GROUP BY c.channel_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "渠道",
+      "首次放款客户数"
+    ],
+    "expected_rows": [
+      {
+        "渠道": "手机银行",
+        "首次放款客户数": 6
+      },
+      {
+        "渠道": "线下网点",
+        "首次放款客户数": 6
+      },
+      {
+        "渠道": "合作渠道",
+        "首次放款客户数": 9
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-018",
+    "kind": "query",
+    "question": "截至 2026 年 7 月 31 日，各产品 DPD 至少 1 天且本金余额大于零的借据有多少笔？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT p.product_name AS 贷款产品,COUNT(DISTINCT CASE WHEN s.dpd>=1 AND s.outstanding_principal>0 THEN s.loan_id END) AS 逾期贷款笔数 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id JOIN loan_products p ON l.product_id=p.product_id WHERE s.snapshot_on=DATE '2026-07-31' GROUP BY p.product_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "贷款产品",
+      "逾期贷款笔数"
+    ],
+    "expected_rows": [
+      {
+        "贷款产品": "消费分期贷",
+        "逾期贷款笔数": 34
+      },
+      {
+        "贷款产品": "优享贷",
+        "逾期贷款笔数": 47
+      },
+      {
+        "贷款产品": "薪享贷",
+        "逾期贷款笔数": 51
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-019",
+    "kind": "query",
+    "question": "2026 年 7 月 31 日日终，各机构贷款本金余额是多少？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT o.org_name AS 机构,SUM(s.outstanding_principal) AS 贷款本金余额 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id WHERE s.snapshot_on=DATE '2026-07-31' GROUP BY o.org_name",
+    "ordered": false,
+    "scales": {},
+    "note": "snapshot/event alternatives; retrieval gold path is snapshot only",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "贷款本金余额"
+    ],
+    "expected_rows": [
+      {
+        "机构": "杭州分行",
+        "贷款本金余额": "3231989.47"
+      },
+      {
+        "机构": "广州分行",
+        "贷款本金余额": "2017475.38"
+      },
+      {
+        "机构": "北京分行",
+        "贷款本金余额": "2394026.08"
+      },
+      {
+        "机构": "上海分行",
+        "贷款本金余额": "3059164.35"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-020",
+    "kind": "query",
+    "question": "2026 年 7 月 31 日日终，各机构 DPD 至少 1 天借据的逾期应还本金是多少？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT o.org_name AS 机构,SUM(CASE WHEN s.dpd>=1 THEN s.overdue_principal ELSE 0 END) AS 逾期应还本金 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id WHERE s.snapshot_on=DATE '2026-07-31' GROUP BY o.org_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "逾期应还本金"
+    ],
+    "expected_rows": [
+      {
+        "机构": "杭州分行",
+        "逾期应还本金": "493220.60"
+      },
+      {
+        "机构": "广州分行",
+        "逾期应还本金": "557208.29"
+      },
+      {
+        "机构": "北京分行",
+        "逾期应还本金": "434579.07"
+      },
+      {
+        "机构": "上海分行",
+        "逾期应还本金": "595895.65"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-021",
+    "kind": "query",
+    "question": "2026 年 7 月 31 日各机构的逾期贷款余额占比是多少？逾期按 DPD 至少 1 天，请同时列出分子和分母。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT o.org_name AS 机构,SUM(CASE WHEN s.dpd>=1 THEN s.outstanding_principal ELSE 0 END) AS 分子,SUM(s.outstanding_principal) AS 分母,SUM(CASE WHEN s.dpd>=1 THEN s.outstanding_principal ELSE 0 END)/NULLIF(SUM(s.outstanding_principal),0) AS 逾期贷款余额占比 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id WHERE s.snapshot_on=DATE '2026-07-31' GROUP BY o.org_name",
+    "ordered": false,
+    "scales": {
+      "逾期贷款余额占比": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "分子",
+      "分母",
+      "逾期贷款余额占比"
+    ],
+    "expected_rows": [
+      {
+        "机构": "杭州分行",
+        "分子": "1084254.56",
+        "分母": "3231989.47",
+        "逾期贷款余额占比": 0.3354758949756108
+      },
+      {
+        "机构": "广州分行",
+        "分子": "870891.75",
+        "分母": "2017475.38",
+        "逾期贷款余额占比": 0.43167404104827295
+      },
+      {
+        "机构": "北京分行",
+        "分子": "761912.70",
+        "分母": "2394026.08",
+        "逾期贷款余额占比": 0.3182558061355789
+      },
+      {
+        "机构": "上海分行",
+        "分子": "1156754.46",
+        "分母": "3059164.35",
+        "逾期贷款余额占比": 0.3781275955311129
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-022",
+    "kind": "query",
+    "question": "2026 年 7 月 31 日各机构的逾期应还本金占比是多少？逾期按 DPD 至少 1 天，请同时列出分子和分母。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT o.org_name AS 机构,SUM(CASE WHEN s.dpd>=1 THEN s.overdue_principal ELSE 0 END) AS 分子,SUM(s.outstanding_principal) AS 分母,SUM(CASE WHEN s.dpd>=1 THEN s.overdue_principal ELSE 0 END)/NULLIF(SUM(s.outstanding_principal),0) AS 逾期应还本金占比 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id WHERE s.snapshot_on=DATE '2026-07-31' GROUP BY o.org_name",
+    "ordered": false,
+    "scales": {
+      "逾期应还本金占比": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "分子",
+      "分母",
+      "逾期应还本金占比"
+    ],
+    "expected_rows": [
+      {
+        "机构": "杭州分行",
+        "分子": "493220.60",
+        "分母": "3231989.47",
+        "逾期应还本金占比": 0.15260588086012544
+      },
+      {
+        "机构": "广州分行",
+        "分子": "557208.29",
+        "分母": "2017475.38",
+        "逾期应还本金占比": 0.27619087475555715
+      },
+      {
+        "机构": "北京分行",
+        "分子": "434579.07",
+        "分母": "2394026.08",
+        "逾期应还本金占比": 0.1815264560526425
+      },
+      {
+        "机构": "上海分行",
+        "分子": "595895.65",
+        "分母": "3059164.35",
+        "逾期应还本金占比": 0.19479033547184219
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-023",
+    "kind": "query",
+    "question": "截至 2026 年 7 月 31 日，各产品 DPD 至少 30 天且仍有本金余额的借据有多少笔？",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT p.product_name AS 贷款产品,COUNT(DISTINCT CASE WHEN s.dpd>=30 AND s.outstanding_principal>0 THEN s.loan_id END) AS 逾期贷款笔数 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id JOIN loan_products p ON l.product_id=p.product_id WHERE s.snapshot_on=DATE '2026-07-31' GROUP BY p.product_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "贷款产品",
+      "逾期贷款笔数"
+    ],
+    "expected_rows": [
+      {
+        "贷款产品": "消费分期贷",
+        "逾期贷款笔数": 22
+      },
+      {
+        "贷款产品": "薪享贷",
+        "逾期贷款笔数": 29
+      },
+      {
+        "贷款产品": "优享贷",
+        "逾期贷款笔数": 30
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-024",
+    "kind": "query",
+    "question": "对 2026 年 7 月完成最终通过或拒绝的申请，计算各机构从申请到审批的平均天数，保留两位小数。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT o.org_name AS 机构,ROUND(AVG(DATE_DIFF('day',a.applied_on,e.decided_on)),2) AS 平均审批天数 FROM approval_events e JOIN applications a ON e.application_id=a.application_id JOIN org_units o ON a.org_id=o.org_id WHERE e.decided_on >= DATE '2026-07-01' AND e.decided_on < DATE '2026-08-01' AND e.is_final=1 AND e.decision IN ('approved','rejected') GROUP BY o.org_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "平均审批天数"
+    ],
+    "expected_rows": [
+      {
+        "机构": "北京分行",
+        "平均审批天数": 1.0
+      },
+      {
+        "机构": "杭州分行",
+        "平均审批天数": 1.0
+      },
+      {
+        "机构": "广州分行",
+        "平均审批天数": 1.0
+      },
+      {
+        "机构": "上海分行",
+        "平均审批天数": 1.0
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-025",
+    "kind": "query",
+    "question": "2026 年 7 月每种贷款产品新建了多少笔借据？所有产品都列出，没有借据的显示 0。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT p.product_name AS 贷款产品,COUNT(l.loan_id) AS 借据笔数 FROM loan_products p LEFT JOIN loans l ON p.product_id=l.product_id AND l.originated_on >= DATE '2026-07-01' AND l.originated_on < DATE '2026-08-01' GROUP BY p.product_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "贷款产品",
+      "借据笔数"
+    ],
+    "expected_rows": [
+      {
+        "贷款产品": "消费分期贷",
+        "借据笔数": 15
+      },
+      {
+        "贷款产品": "优享贷",
+        "借据笔数": 15
+      },
+      {
+        "贷款产品": "薪享贷",
+        "借据笔数": 15
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-026",
+    "kind": "query",
+    "question": "2026 年 7 月华东地区按渠道统计净放款金额。",
+    "difficulty": "中等",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT c.channel_name AS 渠道,SUM(d.amount) AS 净放款金额 FROM disbursements d JOIN loans l ON d.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id JOIN channels c ON l.channel_id=c.channel_id WHERE d.disbursed_on >= DATE '2026-07-01' AND d.disbursed_on < DATE '2026-08-01' AND d.status IN ('success','reversal') AND o.region='华东' GROUP BY c.channel_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "渠道",
+      "净放款金额"
+    ],
+    "expected_rows": [
+      {
+        "渠道": "手机银行",
+        "净放款金额": "233700.00"
+      },
+      {
+        "渠道": "线下网点",
+        "净放款金额": "333200.00"
+      },
+      {
+        "渠道": "合作渠道",
+        "净放款金额": "389300.00"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-027",
+    "kind": "query",
+    "question": "对比 2026 年 7 月各产品的净放款本金、净实还本金和两者差额；所有产品都列出，无流水记 0。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH f AS (SELECT l.product_id,SUM(d.amount) AS amount FROM disbursements d JOIN loans l ON d.loan_id=l.loan_id WHERE d.disbursed_on >= DATE '2026-07-01' AND d.disbursed_on < DATE '2026-08-01' AND d.status IN ('success','reversal') GROUP BY l.product_id), r AS (SELECT l.product_id,SUM(r.principal_paid) AS amount FROM repayment_transactions r JOIN loans l ON r.loan_id=l.loan_id WHERE r.paid_on >= DATE '2026-07-01' AND r.paid_on < DATE '2026-08-01' AND r.status IN ('success','reversal') GROUP BY l.product_id) SELECT p.product_name AS 贷款产品,COALESCE(f.amount,0) AS 净放款本金,COALESCE(r.amount,0) AS 净实还本金,COALESCE(f.amount,0)-COALESCE(r.amount,0) AS 差额 FROM loan_products p LEFT JOIN f ON p.product_id=f.product_id LEFT JOIN r ON p.product_id=r.product_id",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "贷款产品",
+      "净放款本金",
+      "净实还本金",
+      "差额"
+    ],
+    "expected_rows": [
+      {
+        "贷款产品": "优享贷",
+        "净放款本金": "633400.00",
+        "净实还本金": "423046.12",
+        "差额": "210353.88"
+      },
+      {
+        "贷款产品": "薪享贷",
+        "净放款本金": "658300.00",
+        "净实还本金": "569566.63",
+        "差额": "88733.37"
+      },
+      {
+        "贷款产品": "消费分期贷",
+        "净放款本金": "574500.00",
+        "净实还本金": "535733.33",
+        "差额": "38766.67"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-028",
+    "kind": "query",
+    "question": "截至 2026 年 7 月 31 日，借据至少两笔的客户，按借据笔数降序取前五名，同笔数按客户编号升序，显示累计初始本金。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT customer_id AS 客户编号,COUNT(DISTINCT loan_id) AS 借据笔数,SUM(principal) AS 累计初始本金 FROM loans WHERE originated_on<=DATE '2026-07-31' GROUP BY customer_id HAVING COUNT(DISTINCT loan_id)>=2 ORDER BY 借据笔数 DESC,客户编号 LIMIT 5",
+    "ordered": true,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "客户编号",
+      "借据笔数",
+      "累计初始本金"
+    ],
+    "expected_rows": [
+      {
+        "客户编号": "C00001",
+        "借据笔数": 3,
+        "累计初始本金": "133900.00"
+      },
+      {
+        "客户编号": "C00003",
+        "借据笔数": 3,
+        "累计初始本金": "107100.00"
+      },
+      {
+        "客户编号": "C00006",
+        "借据笔数": 3,
+        "累计初始本金": "97900.00"
+      },
+      {
+        "客户编号": "C00008",
+        "借据笔数": 3,
+        "累计初始本金": "116300.00"
+      },
+      {
+        "客户编号": "C00011",
+        "借据笔数": 3,
+        "累计初始本金": "82400.00"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-029",
+    "kind": "query",
+    "question": "从放款、还款、计划和分配重算 2026 年 7 月 15 日日终各机构的本金余额、逾期应还本金和最大 DPD，不使用每日快照。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH state AS (WITH funded AS (\n SELECT loan_id, SUM(amount) AS funded FROM disbursements\n WHERE disbursed_on <= DATE '2026-07-15' AND status IN ('success','reversal') GROUP BY loan_id\n), paid AS (\n SELECT loan_id, SUM(principal_paid) AS paid FROM repayment_transactions\n WHERE paid_on <= DATE '2026-07-15' AND status IN ('success','reversal') GROUP BY loan_id\n), allocated AS (\n SELECT a.schedule_id, SUM(a.principal_paid) AS paid, SUM(a.interest_paid) AS interest_paid\n FROM repayment_allocations a JOIN repayment_transactions t ON a.transaction_id=t.transaction_id\n WHERE t.paid_on <= DATE '2026-07-15' AND t.status IN ('success','reversal') GROUP BY a.schedule_id\n), overdue AS (\n SELECT s.loan_id,\n SUM(GREATEST(s.principal_due-COALESCE(a.paid,0),0)) AS overdue_principal,\n MAX(CASE WHEN s.principal_due-COALESCE(a.paid,0)>0 OR s.interest_due-COALESCE(a.interest_paid,0)>0\n     THEN DATE_DIFF('day',s.due_on,DATE '2026-07-15') ELSE 0 END) AS dpd\n FROM repayment_schedules s LEFT JOIN allocated a ON s.schedule_id=a.schedule_id\n WHERE s.due_on < DATE '2026-07-15' GROUP BY s.loan_id\n)\nSELECT l.loan_id, GREATEST(COALESCE(f.funded,0)-COALESCE(p.paid,0),0) AS outstanding_principal,\n COALESCE(o.overdue_principal,0) AS overdue_principal, COALESCE(o.dpd,0) AS dpd\nFROM loans l LEFT JOIN funded f ON l.loan_id=f.loan_id\nLEFT JOIN paid p ON l.loan_id=p.loan_id LEFT JOIN overdue o ON l.loan_id=o.loan_id\nWHERE l.originated_on <= DATE '2026-07-15') SELECT o.org_name AS 机构,SUM(s.outstanding_principal) AS 本金余额,SUM(s.overdue_principal) AS 逾期应还本金,MAX(s.dpd) AS 最大DPD FROM state s JOIN loans l ON s.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id GROUP BY o.org_name",
+    "ordered": false,
+    "scales": {},
+    "note": "must not query loan_daily_snapshots",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "本金余额",
+      "逾期应还本金",
+      "最大DPD"
+    ],
+    "expected_rows": [
+      {
+        "机构": "杭州分行",
+        "本金余额": "3114289.47",
+        "逾期应还本金": "475270.62",
+        "最大DPD": 527
+      },
+      {
+        "机构": "广州分行",
+        "本金余额": "2020508.70",
+        "逾期应还本金": "568274.95",
+        "最大DPD": 455
+      },
+      {
+        "机构": "北京分行",
+        "本金余额": "2202392.73",
+        "逾期应还本金": "431833.19",
+        "最大DPD": 496
+      },
+      {
+        "机构": "上海分行",
+        "本金余额": "3024681.13",
+        "逾期应还本金": "566503.96",
+        "最大DPD": 510
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-030",
+    "kind": "query",
+    "question": "显示 2026 年 1 至 8 月每月申请笔数及年内累计笔数，缺月份显示 0，按月份升序。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH months AS (SELECT m AS month FROM (VALUES ('2026-01'),('2026-02'),('2026-03'),('2026-04'),('2026-05'),('2026-06'),('2026-07'),('2026-08')) AS v(m)), counts AS (SELECT STRFTIME(applied_on,'%Y-%m') AS month,COUNT(DISTINCT application_id) AS n FROM applications WHERE applied_on BETWEEN DATE '2026-01-01' AND DATE '2026-08-31' GROUP BY STRFTIME(applied_on,'%Y-%m')) SELECT m.month AS 月份,COALESCE(c.n,0) AS 申请笔数,SUM(COALESCE(c.n,0)) OVER(ORDER BY m.month) AS 累计申请笔数 FROM months m LEFT JOIN counts c ON m.month=c.month ORDER BY m.month",
+    "ordered": true,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "月份",
+      "申请笔数",
+      "累计申请笔数"
+    ],
+    "expected_rows": [
+      {
+        "月份": "2026-01",
+        "申请笔数": 57,
+        "累计申请笔数": 57
+      },
+      {
+        "月份": "2026-02",
+        "申请笔数": 54,
+        "累计申请笔数": 111
+      },
+      {
+        "月份": "2026-03",
+        "申请笔数": 59,
+        "累计申请笔数": 170
+      },
+      {
+        "月份": "2026-04",
+        "申请笔数": 55,
+        "累计申请笔数": 225
+      },
+      {
+        "月份": "2026-05",
+        "申请笔数": 60,
+        "累计申请笔数": 285
+      },
+      {
+        "月份": "2026-06",
+        "申请笔数": 57,
+        "累计申请笔数": 342
+      },
+      {
+        "月份": "2026-07",
+        "申请笔数": 59,
+        "累计申请笔数": 401
+      },
+      {
+        "月份": "2026-08",
+        "申请笔数": 58,
+        "累计申请笔数": 459
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-031",
+    "kind": "query",
+    "question": "按渠道比较 2026 年 8 月与 9 月的净放款金额，列出两期金额、差额和环比。无流水金额记 0。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH x AS (SELECT c.channel_name AS 渠道,COALESCE(SUM(CASE WHEN d.disbursed_on BETWEEN DATE '2026-08-01' AND DATE '2026-08-31' THEN d.amount ELSE 0 END),0) AS 八月金额,COALESCE(SUM(CASE WHEN d.disbursed_on BETWEEN DATE '2026-09-01' AND DATE '2026-09-30' THEN d.amount ELSE 0 END),0) AS 九月金额 FROM channels c LEFT JOIN loans l ON c.channel_id=l.channel_id LEFT JOIN disbursements d ON l.loan_id=d.loan_id AND d.status IN ('success','reversal') GROUP BY c.channel_name) SELECT 渠道,八月金额,九月金额,九月金额-八月金额 AS 差额,(九月金额-八月金额)/NULLIF(八月金额,0) AS 环比 FROM x",
+    "ordered": false,
+    "scales": {
+      "环比": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "渠道",
+      "八月金额",
+      "九月金额",
+      "差额",
+      "环比"
+    ],
+    "expected_rows": [
+      {
+        "渠道": "手机银行",
+        "八月金额": "572200.00",
+        "九月金额": "1072500.00",
+        "差额": "500300.00",
+        "环比": 0.8743446347430969
+      },
+      {
+        "渠道": "线下网点",
+        "八月金额": "842900.00",
+        "九月金额": "926500.00",
+        "差额": "83600.00",
+        "环比": 0.09918139755605647
+      },
+      {
+        "渠道": "合作渠道",
+        "八月金额": "476900.00",
+        "九月金额": "1150700.00",
+        "差额": "673800.00",
+        "环比": 1.4128748165233802
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-032",
+    "kind": "query",
+    "question": "按机构比较 2026 年 8 月与 9 月最终审批通过率，给出两期比例、变化百分点和相对变化率。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH x AS (SELECT o.org_name AS 机构,SUM(CASE WHEN e.decided_on<DATE '2026-09-01' AND e.decision='approved' THEN 1 ELSE 0 END)*1.0/NULLIF(SUM(CASE WHEN e.decided_on<DATE '2026-09-01' THEN 1 ELSE 0 END),0) AS 八月通过率,SUM(CASE WHEN e.decided_on>=DATE '2026-09-01' AND e.decision='approved' THEN 1 ELSE 0 END)*1.0/NULLIF(SUM(CASE WHEN e.decided_on>=DATE '2026-09-01' THEN 1 ELSE 0 END),0) AS 九月通过率 FROM approval_events e JOIN applications a ON e.application_id=a.application_id JOIN org_units o ON a.org_id=o.org_id WHERE e.decided_on BETWEEN DATE '2026-08-01' AND DATE '2026-09-30' AND e.is_final=1 AND e.decision IN ('approved','rejected') GROUP BY o.org_name) SELECT 机构,八月通过率,九月通过率,(九月通过率-八月通过率)*100 AS 变化百分点,(九月通过率-八月通过率)/NULLIF(八月通过率,0) AS 相对变化率 FROM x",
+    "ordered": false,
+    "scales": {
+      "八月通过率": 6,
+      "九月通过率": 6,
+      "变化百分点": 6,
+      "相对变化率": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "八月通过率",
+      "九月通过率",
+      "变化百分点",
+      "相对变化率"
+    ],
+    "expected_rows": [
+      {
+        "机构": "北京分行",
+        "八月通过率": 0.8571428571428571,
+        "九月通过率": 0.7391304347826086,
+        "变化百分点": -11.801242236024844,
+        "相对变化率": -0.13768115942028986
+      },
+      {
+        "机构": "上海分行",
+        "八月通过率": 0.8461538461538461,
+        "九月通过率": 0.7692307692307693,
+        "变化百分点": -7.692307692307687,
+        "相对变化率": -0.09090909090909086
+      },
+      {
+        "机构": "杭州分行",
+        "八月通过率": 0.8571428571428571,
+        "九月通过率": 0.7727272727272727,
+        "变化百分点": -8.441558441558438,
+        "相对变化率": -0.09848484848484845
+      },
+      {
+        "机构": "广州分行",
+        "八月通过率": 0.8333333333333334,
+        "九月通过率": 0.8260869565217391,
+        "变化百分点": -0.7246376811594235,
+        "相对变化率": -0.008695652173913082
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-033",
+    "kind": "query",
+    "question": "截至 2026 年 9 月 30 日，分别计算各地区及全部机构整体的逾期贷款余额占比，逾期按 DPD 至少 30 天。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT COALESCE(o.region,'全部机构') AS 地区,SUM(CASE WHEN s.dpd>=30 THEN s.outstanding_principal ELSE 0 END)/NULLIF(SUM(s.outstanding_principal),0) AS 逾期贷款余额占比 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id WHERE s.snapshot_on=DATE '2026-09-30' GROUP BY GROUPING SETS((o.region),())",
+    "ordered": false,
+    "scales": {
+      "逾期贷款余额占比": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "地区",
+      "逾期贷款余额占比"
+    ],
+    "expected_rows": [
+      {
+        "地区": "华东",
+        "逾期贷款余额占比": 0.22603366520601278
+      },
+      {
+        "地区": "华南",
+        "逾期贷款余额占比": 0.274397608728966
+      },
+      {
+        "地区": "华北",
+        "逾期贷款余额占比": 0.23553213648801702
+      },
+      {
+        "地区": "全部机构",
+        "逾期贷款余额占比": 0.23697242486534512
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-034",
+    "kind": "query",
+    "question": "展示 2026 年 1 至 9 月每个月末的贷款本金余额，按月份升序。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT STRFTIME(snapshot_on,'%Y-%m') AS 月份,SUM(outstanding_principal) AS 贷款本金余额 FROM loan_daily_snapshots WHERE snapshot_on BETWEEN DATE '2026-01-01' AND DATE '2026-09-30' AND snapshot_on=LAST_DAY(snapshot_on) GROUP BY STRFTIME(snapshot_on,'%Y-%m') ORDER BY 月份",
+    "ordered": true,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "月份",
+      "贷款本金余额"
+    ],
+    "expected_rows": [
+      {
+        "月份": "2026-01",
+        "贷款本金余额": "9332322.08"
+      },
+      {
+        "月份": "2026-02",
+        "贷款本金余额": "9453551.48"
+      },
+      {
+        "月份": "2026-03",
+        "贷款本金余额": "9559426.57"
+      },
+      {
+        "月份": "2026-04",
+        "贷款本金余额": "9944468.31"
+      },
+      {
+        "月份": "2026-05",
+        "贷款本金余额": "10095730.57"
+      },
+      {
+        "月份": "2026-06",
+        "贷款本金余额": "10364801.36"
+      },
+      {
+        "月份": "2026-07",
+        "贷款本金余额": "10702655.28"
+      },
+      {
+        "月份": "2026-08",
+        "贷款本金余额": "11116592.92"
+      },
+      {
+        "月份": "2026-09",
+        "贷款本金余额": "12608922.29"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-035",
+    "kind": "query",
+    "question": "截至 2026 年 9 月 30 日，将本金余额大于零的借据按 DPD 为 0、1～29、30～59、60 天及以上分组，显示笔数和本金余额，无记录组也显示 0。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH buckets AS (SELECT b AS band FROM (VALUES ('0'),('1～29'),('30～59'),('60及以上')) AS v(b)), x AS (SELECT CASE WHEN dpd=0 THEN '0' WHEN dpd<30 THEN '1～29' WHEN dpd<60 THEN '30～59' ELSE '60及以上' END AS band,loan_id,outstanding_principal FROM loan_daily_snapshots WHERE snapshot_on=DATE '2026-09-30' AND outstanding_principal>0) SELECT b.band AS DPD分组,COUNT(x.loan_id) AS 借据笔数,COALESCE(SUM(x.outstanding_principal),0) AS 本金余额 FROM buckets b LEFT JOIN x ON b.band=x.band GROUP BY b.band",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "DPD分组",
+      "借据笔数",
+      "本金余额"
+    ],
+    "expected_rows": [
+      {
+        "DPD分组": "0",
+        "借据笔数": 331,
+        "本金余额": "8359642.24"
+      },
+      {
+        "DPD分组": "60及以上",
+        "借据笔数": 67,
+        "本金余额": "2500900.00"
+      },
+      {
+        "DPD分组": "1～29",
+        "借据笔数": 54,
+        "本金余额": "1261313.16"
+      },
+      {
+        "DPD分组": "30～59",
+        "借据笔数": 16,
+        "本金余额": "487066.89"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-036",
+    "kind": "query",
+    "question": "截至 2026 年 8 月 31 日，列出至少有两笔已新建借据、且历史累计净放款超过 10 万元的客户编号、借据笔数和净放款金额，按金额降序、客户编号升序取前十名。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH f AS (SELECT l.customer_id,SUM(d.amount) AS amount FROM disbursements d JOIN loans l ON d.loan_id=l.loan_id WHERE d.disbursed_on<=DATE '2026-08-31' AND d.status IN ('success','reversal') GROUP BY l.customer_id), l AS (SELECT customer_id,COUNT(DISTINCT loan_id) AS n FROM loans WHERE originated_on<=DATE '2026-08-31' GROUP BY customer_id) SELECT l.customer_id AS 客户编号,l.n AS 借据笔数,f.amount AS 净放款金额 FROM l JOIN f ON l.customer_id=f.customer_id WHERE l.n>=2 AND f.amount>100000 ORDER BY f.amount DESC,l.customer_id LIMIT 10",
+    "ordered": true,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "客户编号",
+      "借据笔数",
+      "净放款金额"
+    ],
+    "expected_rows": [
+      {
+        "客户编号": "C00136",
+        "借据笔数": 3,
+        "净放款金额": "186500.00"
+      },
+      {
+        "客户编号": "C00068",
+        "借据笔数": 3,
+        "净放款金额": "186000.00"
+      },
+      {
+        "客户编号": "C00313",
+        "借据笔数": 3,
+        "净放款金额": "180900.00"
+      },
+      {
+        "客户编号": "C00341",
+        "借据笔数": 3,
+        "净放款金额": "180800.00"
+      },
+      {
+        "客户编号": "C00306",
+        "借据笔数": 3,
+        "净放款金额": "178200.00"
+      },
+      {
+        "客户编号": "C00281",
+        "借据笔数": 3,
+        "净放款金额": "174300.00"
+      },
+      {
+        "客户编号": "C00051",
+        "借据笔数": 3,
+        "净放款金额": "173000.00"
+      },
+      {
+        "客户编号": "C00326",
+        "借据笔数": 3,
+        "净放款金额": "168100.00"
+      },
+      {
+        "客户编号": "C00331",
+        "借据笔数": 3,
+        "净放款金额": "168000.00"
+      },
+      {
+        "客户编号": "C00216",
+        "借据笔数": 3,
+        "净放款金额": "167100.00"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-037",
+    "kind": "query",
+    "question": "2026 年 9 月各机构的净实还本金与净实还利息合计占全机构合计的比例是多少？请列出本息合计及占比。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH x AS (SELECT o.org_name AS 机构,SUM(r.principal_paid+r.interest_paid) AS 本息合计 FROM repayment_transactions r JOIN loans l ON r.loan_id=l.loan_id JOIN org_units o ON l.org_id=o.org_id WHERE r.paid_on BETWEEN DATE '2026-09-01' AND DATE '2026-09-30' AND r.status IN ('success','reversal') GROUP BY o.org_name) SELECT 机构,本息合计,本息合计/NULLIF(SUM(本息合计) OVER(),0) AS 占比 FROM x",
+    "ordered": false,
+    "scales": {
+      "占比": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "机构",
+      "本息合计",
+      "占比"
+    ],
+    "expected_rows": [
+      {
+        "机构": "上海分行",
+        "本息合计": "388101.79",
+        "占比": 0.2239831562211479
+      },
+      {
+        "机构": "北京分行",
+        "本息合计": "488778.94",
+        "占比": 0.2820864332412048
+      },
+      {
+        "机构": "杭州分行",
+        "本息合计": "443683.53",
+        "占比": 0.25606075512493864
+      },
+      {
+        "机构": "广州分行",
+        "本息合计": "412163.31",
+        "占比": 0.23786965541270863
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-038",
+    "kind": "query",
+    "question": "截至 2026 年 9 月 30 日，按初始借据本金减当前本金余额的差额降序取前十笔借据，同差额按借据编号升序；显示两项原值和差额。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT l.loan_id AS 借据编号,l.principal AS 初始借据本金,s.outstanding_principal AS 当前本金余额,l.principal-s.outstanding_principal AS 差额 FROM loan_daily_snapshots s JOIN loans l ON s.loan_id=l.loan_id WHERE s.snapshot_on=DATE '2026-09-30' ORDER BY 差额 DESC,l.loan_id LIMIT 10",
+    "ordered": true,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "借据编号",
+      "初始借据本金",
+      "当前本金余额",
+      "差额"
+    ],
+    "expected_rows": [
+      {
+        "借据编号": "L000844",
+        "初始借据本金": "79900.00",
+        "当前本金余额": "0.00",
+        "差额": "79900.00"
+      },
+      {
+        "借据编号": "L000016",
+        "初始借据本金": "79700.00",
+        "当前本金余额": "0.00",
+        "差额": "79700.00"
+      },
+      {
+        "借据编号": "L000383",
+        "初始借据本金": "79200.00",
+        "当前本金余额": "0.00",
+        "差额": "79200.00"
+      },
+      {
+        "借据编号": "L000109",
+        "初始借据本金": "78600.00",
+        "当前本金余额": "0.00",
+        "差额": "78600.00"
+      },
+      {
+        "借据编号": "L000847",
+        "初始借据本金": "78400.00",
+        "当前本金余额": "0.00",
+        "差额": "78400.00"
+      },
+      {
+        "借据编号": "L000216",
+        "初始借据本金": "78000.00",
+        "当前本金余额": "0.00",
+        "差额": "78000.00"
+      },
+      {
+        "借据编号": "L000202",
+        "初始借据本金": "77800.00",
+        "当前本金余额": "0.00",
+        "差额": "77800.00"
+      },
+      {
+        "借据编号": "L000334",
+        "初始借据本金": "77600.00",
+        "当前本金余额": "0.00",
+        "差额": "77600.00"
+      },
+      {
+        "借据编号": "L000601",
+        "初始借据本金": "77500.00",
+        "当前本金余额": "0.00",
+        "差额": "77500.00"
+      },
+      {
+        "借据编号": "L000304",
+        "初始借据本金": "77400.00",
+        "当前本金余额": "0.00",
+        "差额": "77400.00"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-039",
+    "kind": "query",
+    "question": "找出首次净成功放款日在 2026 年 8 月的客户，按首次放款产品统计这些客户截至 9 月 30 日所有借据的本金余额。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "WITH net AS (SELECT l.customer_id,l.channel_id,l.product_id,l.loan_id,d.disbursed_on,SUM(d.amount) AS amount FROM disbursements d JOIN loans l ON d.loan_id=l.loan_id WHERE d.status IN ('success','reversal') GROUP BY l.customer_id,l.channel_id,l.product_id,l.loan_id,d.disbursed_on HAVING SUM(d.amount)>0), firsts AS (SELECT customer_id,channel_id,product_id,disbursed_on,ROW_NUMBER() OVER(PARTITION BY customer_id ORDER BY disbursed_on,loan_id) AS rn FROM net) SELECT p.product_name AS 首次放款产品,SUM(s.outstanding_principal) AS 本金余额 FROM firsts f JOIN loans l ON f.customer_id=l.customer_id JOIN loan_daily_snapshots s ON l.loan_id=s.loan_id JOIN loan_products p ON f.product_id=p.product_id WHERE f.rn=1 AND f.disbursed_on BETWEEN DATE '2026-08-01' AND DATE '2026-08-31' AND s.snapshot_on=DATE '2026-09-30' GROUP BY p.product_name",
+    "ordered": false,
+    "scales": {},
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "首次放款产品",
+      "本金余额"
+    ],
+    "expected_rows": [
+      {
+        "首次放款产品": "消费分期贷",
+        "本金余额": "743950.02"
+      },
+      {
+        "首次放款产品": "薪享贷",
+        "本金余额": "407275.01"
+      },
+      {
+        "首次放款产品": "优享贷",
+        "本金余额": "684191.68"
+      }
+    ]
+  },
+  {
+    "id": "CREDIT-Q-040",
+    "kind": "query",
+    "question": "对 2026 年 7 月提交的申请，计算截至 9 月 30 日各渠道已完成最终通过或拒绝审批的通过率，同时列出通过数和最终审批总数。",
+    "difficulty": "复杂",
+    "user": "credit_analyst",
+    "gold_sql": "SELECT c.channel_name AS 渠道,COUNT(DISTINCT CASE WHEN e.decision='approved' THEN e.application_id END) AS 通过数,COUNT(DISTINCT e.application_id) AS 最终审批总数,COUNT(DISTINCT CASE WHEN e.decision='approved' THEN e.application_id END)*1.0/NULLIF(COUNT(DISTINCT e.application_id),0) AS 审批通过率 FROM applications a JOIN channels c ON a.channel_id=c.channel_id JOIN approval_events e ON a.application_id=e.application_id WHERE a.applied_on >= DATE '2026-07-01' AND a.applied_on < DATE '2026-08-01' AND e.decided_on<=DATE '2026-09-30' AND e.is_final=1 AND e.decision IN ('approved','rejected') GROUP BY c.channel_name",
+    "ordered": false,
+    "scales": {
+      "审批通过率": 6
+    },
+    "note": "",
+    "seen_status": "authored_project_cases_not_blind_holdout",
+    "gold_success": true,
+    "expected_columns": [
+      "渠道",
+      "通过数",
+      "最终审批总数",
+      "审批通过率"
+    ],
+    "expected_rows": [
+      {
+        "渠道": "手机银行",
+        "通过数": 13,
+        "最终审批总数": 18,
+        "审批通过率": 0.7222222222222222
+      },
+      {
+        "渠道": "线下网点",
+        "通过数": 15,
+        "最终审批总数": 17,
+        "审批通过率": 0.8823529411764706
+      },
+      {
+        "渠道": "合作渠道",
+        "通过数": 16,
+        "最终审批总数": 19,
+        "审批通过率": 0.8421052631578947
+      }
+    ]
+  }
+]
