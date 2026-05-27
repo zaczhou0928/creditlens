@@ -1,0 +1,46 @@
+name: Checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    env:
+      CREDIT_DEMO_MODE: "true"
+      CREDIT_EXTERNAL_MODEL_ENABLED: "false"
+      CREDIT_REFERENCE_DATE: "2026-10-01"
+      LLM_API_KEY: ""
+      PYTHONDONTWRITEBYTECODE: "1"
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements*.txt
+            backend/constraints.txt
+      - run: pip install -r requirements-dev.txt -c constraints.txt
+      - run: python seed_demo_data.py
+      - run: python -m unittest discover -s tests -v
+      - run: python scripts/validate_credit_data.py
+      - run: python scripts/evaluate_credit.py
+      - run: python scripts/live_smoke.py --local-contract
+      - run: PYTHONPATH=. python scripts/verify_benchmark_gold.py
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
