@@ -1,0 +1,59 @@
+{
+  "executed_on": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "recorded_at": "2026-10-19T14:52:47.683672+08:00",
+  "external_model_requests": false,
+  "application_sha256": "d58aac7e53400cd2af0dbe011a2d1c0789962570c9157758383d0c9e60a40646",
+  "unit_tests": {
+    "passed": 64
+  },
+  "data_validation": {
+    "status": "passed",
+    "tables": 12,
+    "checks": 7057,
+    "independently_rebuilt_snapshots": 28191,
+    "snapshot_count": 260922,
+    "data_version": "0f974d296f352e6a"
+  },
+  "offline_metrics": {
+    "passed": 120,
+    "total": 120
+  },
+  "scripted_open_queries": {
+    "passed": 14,
+    "total": 14
+  },
+  "independent_benchmark_references": {
+    "passed": 40,
+    "total": 40
+  },
+  "http_smoke": {
+    "executed_at": "2026-10-19T14:48:13.087618+08:00",
+    "mode": "offline_demo_real_http",
+    "checks": [
+      "anonymous request rejected",
+      "analyst login",
+      "three-channel financial query",
+      "SQL and data provenance",
+      "contextual follow-up",
+      "regional login",
+      "cross-user result access rejected",
+      "restricted fields omitted",
+      "report from selected owned result"
+    ],
+    "passed": 9,
+    "external_requests": false
+  },
+  "checkpoints": {
+    "05": "Deterministic synthetic data matches the full release manifest.",
+    "10": "Scoped SQL returns only two authorized institutions and rejects writes and sensitive fields.",
+    "15": "Offline schema retrieval returns relevant authorized metadata.",
+    "21": "API application matches the final application exercised by the real HTTP smoke test."
+  },
+  "initial_frontend_build": "passed",
+  "final_frontend_build": "passed",
+  "frontend_install": "npm ci",
+  "python": "3.13.7",
+  "node": "24.19.0",
+  "history_dates_are_retrospective": true
+}

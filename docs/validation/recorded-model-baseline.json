@@ -1,0 +1,62 @@
+{
+  "recorded_on": "2026-10-07",
+  "rerun_during_publication": false,
+  "dataset_version": "0f974d296f352e6a",
+  "scope": "Project-authored evaluation; not blind or independent human review.",
+  "query_variants": {
+    "rag_20261007": {
+      "planned": 40,
+      "attempted": 40,
+      "sql_success": 36,
+      "reviewed_counts": {
+        "n": 40,
+        "raw_value_match": 26,
+        "display_normalized_match": 30,
+        "column_semantics_accepted": 29,
+        "passes_current_results_and_executed_diagnostics": 20
+      }
+    },
+    "full_schema_20261007": {
+      "planned": 40,
+      "attempted": 40,
+      "sql_success": 31,
+      "reviewed_counts": {
+        "n": 40,
+        "raw_value_match": 25,
+        "display_normalized_match": 26,
+        "column_semantics_accepted": 26,
+        "passes_current_results_and_executed_diagnostics": 19
+      }
+    }
+  },
+  "behaviors": {
+    "I": {
+      "passed": 3,
+      "total": 8,
+      "necessary_initial_clarifications": 3,
+      "correct_initial_clarifications": 0,
+      "clarification_recall": 0,
+      "clarification_precision": null,
+      "real_pending_restore_stage_exercised": false
+    },
+    "S": {
+      "passed": 3,
+      "total": 6,
+      "exposure_tasks": 0
+    },
+    "R": {
+      "passed": 0,
+      "total": 6,
+      "required_points_passed": 0,
+      "required_points_total": 22,
+      "facts_correct": 0,
+      "facts_traceable": 0,
+      "facts_total": 0,
+      "report_objects_produced": 0,
+      "wrong_database_routes": 5,
+      "fact_metrics_status": "N/A: no report object produced; ordinary SQL-result analyses excluded and errors retained in case reviews",
+      "chart_tasks": 1,
+      "correct_chart_tasks": 0
+    }
+  }
+}
